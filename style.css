@@ -339,3 +339,16 @@ background:#86efac;
   font-size: 18px;
   font-weight: bold;
 }
+.estado-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.estado-botones button {
+  width: auto;
+  padding: 10px 14px;
+  font-size: 16px;
+  border-radius: 12px;
+}

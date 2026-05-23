@@ -35,9 +35,19 @@ const totalPedidos = document.getElementById("totalPedidos");
 const totalPrendas = document.getElementById("totalPrendas");
 const totalMateriales = document.getElementById("totalMateriales");
 const totalUnidadesStock = document.getElementById("totalUnidadesStock");
+const pedidosPendientes = document.getElementById("pedidosPendientes");
+const pedidosEntregados = document.getElementById("pedidosEntregados");
 
 let pedidos = JSON.parse(localStorage.getItem("pedidos")) || [];
 let stock = JSON.parse(localStorage.getItem("stock")) || [];
+
+function guardarPedidos() {
+  localStorage.setItem("pedidos", JSON.stringify(pedidos));
+}
+
+function guardarStock() {
+  localStorage.setItem("stock", JSON.stringify(stock));
+}
 
 function ocultarPantallas() {
   pantallaPedidos.classList.add("oculto");
@@ -45,6 +55,19 @@ function ocultarPantallas() {
   pantallaTareas.classList.add("oculto");
   pantallaProduccion.classList.add("oculto");
   pantallaEstadisticas.classList.add("oculto");
+}
+
+function actualizarTodo() {
+  mostrarPedidos();
+  mostrarStock();
+  mostrarProduccion();
+  mostrarEstadisticas();
+}
+
+function claseEstado(estado) {
+  if (estado === "En proceso") return "proceso";
+  if (estado === "Entregado") return "finalizado";
+  return "pendiente";
 }
 
 loginForm.addEventListener("submit", function(event) {
@@ -58,9 +81,7 @@ loginForm.addEventListener("submit", function(event) {
     appScreen.classList.remove("oculto");
     menuPrincipal.classList.remove("oculto");
     ocultarPantallas();
-
     mensajeError.textContent = "";
-
     actualizarTodo();
   } else {
     mensajeError.textContent = "Usuario o contraseña incorrectos";
@@ -72,13 +93,6 @@ logoutBtn.addEventListener("click", function() {
   loginScreen.classList.remove("oculto");
   loginForm.reset();
 });
-
-function actualizarTodo() {
-  mostrarPedidos();
-  mostrarStock();
-  mostrarProduccion();
-  mostrarEstadisticas();
-}
 
 btnPedidos.addEventListener("click", function() {
   menuPrincipal.classList.add("oculto");
@@ -108,11 +122,12 @@ pedidoForm.addEventListener("submit", function(event) {
     cliente: cliente,
     prenda: prenda,
     cantidad: cantidad,
-    fecha: fecha
+    fecha: fecha,
+    estado: "Pendiente"
   };
 
   pedidos.push(nuevoPedido);
-  localStorage.setItem("pedidos", JSON.stringify(pedidos));
+  guardarPedidos();
 
   pedidoForm.reset();
   actualizarTodo();
@@ -122,6 +137,8 @@ function mostrarPedidos() {
   listaPedidos.innerHTML = "";
 
   pedidos.forEach(function(pedido, index) {
+    if (!pedido.estado) pedido.estado = "Pendiente";
+
     const fila = document.createElement("tr");
 
     fila.innerHTML = `
@@ -129,18 +146,19 @@ function mostrarPedidos() {
       <td>${pedido.prenda}</td>
       <td>${pedido.cantidad}</td>
       <td>${pedido.fecha}</td>
-      <td>
-        <button class="delete-btn" onclick="eliminarPedido(${index})">🗑️</button>
-      </td>
+      <td><span class="estado ${claseEstado(pedido.estado)}">${pedido.estado}</span></td>
+      <td><button class="delete-btn" onclick="eliminarPedido(${index})">🗑️</button></td>
     `;
 
     listaPedidos.appendChild(fila);
   });
+
+  guardarPedidos();
 }
 
 function eliminarPedido(index) {
   pedidos.splice(index, 1);
-  localStorage.setItem("pedidos", JSON.stringify(pedidos));
+  guardarPedidos();
   actualizarTodo();
 }
 
@@ -174,7 +192,7 @@ stockForm.addEventListener("submit", function(event) {
   };
 
   stock.push(nuevoMaterial);
-  localStorage.setItem("stock", JSON.stringify(stock));
+  guardarStock();
 
   stockForm.reset();
   actualizarTodo();
@@ -190,9 +208,7 @@ function mostrarStock() {
       <td>${item.material}</td>
       <td>${item.unidades}</td>
       <td>${item.categoria}</td>
-      <td>
-        <button class="delete-btn" onclick="eliminarStock(${index})">🗑️</button>
-      </td>
+      <td><button class="delete-btn" onclick="eliminarStock(${index})">🗑️</button></td>
     `;
 
     listaStock.appendChild(fila);
@@ -201,7 +217,7 @@ function mostrarStock() {
 
 function eliminarStock(index) {
   stock.splice(index, 1);
-  localStorage.setItem("stock", JSON.stringify(stock));
+  guardarStock();
   actualizarTodo();
 }
 
@@ -237,18 +253,7 @@ function mostrarProduccion() {
   }
 
   pedidos.forEach(function(pedido, index) {
-    let estadoClase = "pendiente";
-    let estadoTexto = "Pendiente";
-
-    if (index % 3 === 1) {
-      estadoClase = "proceso";
-      estadoTexto = "En proceso";
-    }
-
-    if (index % 3 === 2) {
-      estadoClase = "finalizado";
-      estadoTexto = "Finalizado";
-    }
+    if (!pedido.estado) pedido.estado = "Pendiente";
 
     const tarjeta = document.createElement("div");
     tarjeta.classList.add("produccion-card");
@@ -258,11 +263,26 @@ function mostrarProduccion() {
       <p><strong>Prenda:</strong> ${pedido.prenda}</p>
       <p><strong>Cantidad:</strong> ${pedido.cantidad}</p>
       <p><strong>Entrega:</strong> ${pedido.fecha}</p>
-      <span class="estado ${estadoClase}">${estadoTexto}</span>
+
+      <span class="estado ${claseEstado(pedido.estado)}">${pedido.estado}</span>
+
+      <div class="estado-botones">
+        <button onclick="cambiarEstado(${index}, 'Pendiente')">Pendiente</button>
+        <button onclick="cambiarEstado(${index}, 'En proceso')">En proceso</button>
+        <button onclick="cambiarEstado(${index}, 'Entregado')">Entregado</button>
+      </div>
     `;
 
     listaProduccion.appendChild(tarjeta);
   });
+
+  guardarPedidos();
+}
+
+function cambiarEstado(index, nuevoEstado) {
+  pedidos[index].estado = nuevoEstado;
+  guardarPedidos();
+  actualizarTodo();
 }
 
 btnEstadisticas.addEventListener("click", function() {
@@ -286,8 +306,18 @@ function mostrarEstadisticas() {
     return total + Number(item.unidades);
   }, 0);
 
+  const pendientes = pedidos.filter(function(pedido) {
+    return !pedido.estado || pedido.estado === "Pendiente";
+  }).length;
+
+  const entregados = pedidos.filter(function(pedido) {
+    return pedido.estado === "Entregado";
+  }).length;
+
   totalPedidos.textContent = pedidos.length;
   totalPrendas.textContent = sumaPrendas;
   totalMateriales.textContent = stock.length;
   totalUnidadesStock.textContent = sumaUnidadesStock;
+  pedidosPendientes.textContent = pendientes;
+  pedidosEntregados.textContent = entregados;
 }

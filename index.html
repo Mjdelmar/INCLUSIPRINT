@@ -59,7 +59,7 @@
     <article class="menu-card" id="btnProduccion">
       <span class="icono">✅</span>
       <h2>Producción</h2>
-      <p>Consultar el estado del trabajo diario.</p>
+      <p>Cambiar el estado de los pedidos.</p>
     </article>
 
     <article class="menu-card" id="btnEstadisticas">
@@ -100,6 +100,7 @@
             <th>Prenda</th>
             <th>Cantidad</th>
             <th>Fecha</th>
+            <th>Estado</th>
             <th>Acción</th>
           </tr>
         </thead>
@@ -149,54 +150,19 @@
     <p class="descripcion">Consulta los pasos principales del proceso de serigrafía.</p>
 
     <div class="pasos-grid">
-      <article class="paso-card">
-        <span class="paso-numero">1</span>
-        <span class="paso-icono">👕</span>
-        <h3>Preparar la prenda</h3>
-        <p>Colocar la camiseta o uniforme sobre la mesa de trabajo.</p>
-      </article>
-
-      <article class="paso-card">
-        <span class="paso-numero">2</span>
-        <span class="paso-icono">🖼️</span>
-        <h3>Colocar el diseño</h3>
-        <p>Situar la pantalla o plantilla en la posición correcta.</p>
-      </article>
-
-      <article class="paso-card">
-        <span class="paso-numero">3</span>
-        <span class="paso-icono">🎨</span>
-        <h3>Aplicar la tinta</h3>
-        <p>Extender la tinta con cuidado usando la racleta.</p>
-      </article>
-
-      <article class="paso-card">
-        <span class="paso-numero">4</span>
-        <span class="paso-icono">🌬️</span>
-        <h3>Secar la prenda</h3>
-        <p>Dejar secar el uniforme antes de manipularlo.</p>
-      </article>
-
-      <article class="paso-card">
-        <span class="paso-numero">5</span>
-        <span class="paso-icono">🔍</span>
-        <h3>Revisar calidad</h3>
-        <p>Comprobar que el dibujo está completo y bien colocado.</p>
-      </article>
-
-      <article class="paso-card">
-        <span class="paso-numero">6</span>
-        <span class="paso-icono">📦</span>
-        <h3>Preparar entrega</h3>
-        <p>Doblar, contar y guardar las prendas terminadas.</p>
-      </article>
+      <article class="paso-card"><span class="paso-numero">1</span><span class="paso-icono">👕</span><h3>Preparar la prenda</h3><p>Colocar la camiseta o uniforme sobre la mesa de trabajo.</p></article>
+      <article class="paso-card"><span class="paso-numero">2</span><span class="paso-icono">🖼️</span><h3>Colocar el diseño</h3><p>Situar la pantalla o plantilla en la posición correcta.</p></article>
+      <article class="paso-card"><span class="paso-numero">3</span><span class="paso-icono">🎨</span><h3>Aplicar la tinta</h3><p>Extender la tinta con cuidado usando la racleta.</p></article>
+      <article class="paso-card"><span class="paso-numero">4</span><span class="paso-icono">🌬️</span><h3>Secar la prenda</h3><p>Dejar secar el uniforme antes de manipularlo.</p></article>
+      <article class="paso-card"><span class="paso-numero">5</span><span class="paso-icono">🔍</span><h3>Revisar calidad</h3><p>Comprobar que el dibujo está completo y bien colocado.</p></article>
+      <article class="paso-card"><span class="paso-numero">6</span><span class="paso-icono">📦</span><h3>Preparar entrega</h3><p>Doblar, contar y guardar las prendas terminadas.</p></article>
     </div>
   </section>
 
   <section id="pantallaProduccion" class="pantalla oculto">
     <button class="volver-btn" id="volverProduccion">← Volver al menú</button>
     <h2>Seguimiento de producción</h2>
-    <p class="descripcion">Consulta el estado de los pedidos realizados.</p>
+    <p class="descripcion">Consulta y modifica el estado de los pedidos realizados.</p>
     <div id="listaProduccion"></div>
   </section>
 
@@ -206,29 +172,12 @@
     <p class="descripcion">Resumen general de la actividad registrada en InclusiPrint.</p>
 
     <div class="estadisticas-grid">
-      <article class="estadistica-card">
-        <span class="estadistica-icono">📋</span>
-        <h3 id="totalPedidos">0</h3>
-        <p>Pedidos registrados</p>
-      </article>
-
-      <article class="estadistica-card">
-        <span class="estadistica-icono">👕</span>
-        <h3 id="totalPrendas">0</h3>
-        <p>Prendas solicitadas</p>
-      </article>
-
-      <article class="estadistica-card">
-        <span class="estadistica-icono">📦</span>
-        <h3 id="totalMateriales">0</h3>
-        <p>Materiales en stock</p>
-      </article>
-
-      <article class="estadistica-card">
-        <span class="estadistica-icono">🧮</span>
-        <h3 id="totalUnidadesStock">0</h3>
-        <p>Unidades disponibles</p>
-      </article>
+      <article class="estadistica-card"><span class="estadistica-icono">📋</span><h3 id="totalPedidos">0</h3><p>Pedidos registrados</p></article>
+      <article class="estadistica-card"><span class="estadistica-icono">👕</span><h3 id="totalPrendas">0</h3><p>Prendas solicitadas</p></article>
+      <article class="estadistica-card"><span class="estadistica-icono">📦</span><h3 id="totalMateriales">0</h3><p>Materiales en stock</p></article>
+      <article class="estadistica-card"><span class="estadistica-icono">🧮</span><h3 id="totalUnidadesStock">0</h3><p>Unidades disponibles</p></article>
+      <article class="estadistica-card"><span class="estadistica-icono">⏳</span><h3 id="pedidosPendientes">0</h3><p>Pedidos pendientes</p></article>
+      <article class="estadistica-card"><span class="estadistica-icono">✅</span><h3 id="pedidosEntregados">0</h3><p>Pedidos entregados</p></article>
     </div>
   </section>
 
