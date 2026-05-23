@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InclusiPrint</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main id="loginScreen" class="login-container">
+  <section class="login-card">
+    <h1>InclusiPrint</h1>
+    <p>Aplicación accesible para talleres ocupacionales de serigrafía</p>
+
+    <form id="loginForm">
+      <label for="usuario">Usuario</label>
+      <input type="text" id="usuario" placeholder="Introduce tu usuario">
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" placeholder="Introduce tu contraseña">
+
+      <button type="submit">Entrar</button>
+    </form>
+
+    <p id="mensajeError"></p>
+  </section>
+</main>
+
+<main id="appScreen" class="app-container oculto">
+
+  <header class="app-header">
+    <div>
+      <h1>InclusiPrint</h1>
+      <p>Panel principal del taller</p>
+    </div>
+    <button id="logoutBtn" class="logout-btn">Salir</button>
+  </header>
+
+  <section id="menuPrincipal" class="menu-grid">
+    <article class="menu-card" id="btnPedidos">
+      <span class="icono">📋</span>
+      <h2>Pedidos</h2>
+      <p>Registrar y consultar pedidos de uniformes.</p>
+    </article>
+
+    <article class="menu-card" id="btnTareas">
+      <span class="icono">🎨</span>
+      <h2>Tareas visuales</h2>
+      <p>Ver los pasos del proceso de serigrafía.</p>
+    </article>
+
+    <article class="menu-card" id="btnStock">
+      <span class="icono">📦</span>
+      <h2>Stock</h2>
+      <p>Controlar camisetas, tintas y materiales.</p>
+    </article>
+
+    <article class="menu-card" id="btnProduccion">
+      <span class="icono">✅</span>
+      <h2>Producción</h2>
+      <p>Consultar el estado del trabajo diario.</p>
+    </article>
+
+    <article class="menu-card" id="btnEstadisticas">
+      <span class="icono">📊</span>
+      <h2>Estadísticas</h2>
+      <p>Ver resumen general del taller.</p>
+    </article>
+  </section>
+
+  <section id="pantallaPedidos" class="pantalla oculto">
+    <button class="volver-btn" id="volverPedidos">← Volver al menú</button>
+    <h2>Gestión de pedidos</h2>
+    <p class="descripcion">Registra los pedidos de uniformes que llegan al taller.</p>
+
+    <form id="pedidoForm" class="formulario">
+      <label for="cliente">Cliente</label>
+      <input type="text" id="cliente" placeholder="Ejemplo: Ayuntamiento">
+
+      <label for="prenda">Tipo de prenda</label>
+      <input type="text" id="prenda" placeholder="Ejemplo: Camiseta, polo, uniforme">
+
+      <label for="cantidad">Cantidad</label>
+      <input type="number" id="cantidad" placeholder="Ejemplo: 25">
+
+      <label for="fecha">Fecha de entrega</label>
+      <input type="date" id="fecha">
+
+      <button type="submit">Guardar pedido</button>
+    </form>
+
+    <h3>Pedidos registrados</h3>
+
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Prenda</th>
+            <th>Cantidad</th>
+            <th>Fecha</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="listaPedidos"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="pantallaStock" class="pantalla oculto">
+    <button class="volver-btn" id="volverStock">← Volver al menú</button>
+    <h2>Control de stock</h2>
+    <p class="descripcion">Registra los materiales disponibles para el taller de serigrafía.</p>
+
+    <form id="stockForm" class="formulario">
+      <label for="material">Material</label>
+      <input type="text" id="material" placeholder="Ejemplo: Camisetas blancas talla M">
+
+      <label for="unidades">Unidades disponibles</label>
+      <input type="number" id="unidades" placeholder="Ejemplo: 40">
+
+      <label for="categoria">Categoría</label>
+      <input type="text" id="categoria" placeholder="Ejemplo: Prendas, tintas, herramientas">
+
+      <button type="submit">Guardar material</button>
+    </form>
+
+    <h3>Materiales registrados</h3>
+
+    <div class="tabla-contenedor">
+      <table>
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Unidades</th>
+            <th>Categoría</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody id="listaStock"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="pantallaTareas" class="pantalla oculto">
+    <button class="volver-btn" id="volverTareas">← Volver al menú</button>
+    <h2>Tareas visuales</h2>
+    <p class="descripcion">Consulta los pasos principales del proceso de serigrafía.</p>
+
+    <div class="pasos-grid">
+      <article class="paso-card">
+        <span class="paso-numero">1</span>
+        <span class="paso-icono">👕</span>
+        <h3>Preparar la prenda</h3>
+        <p>Colocar la camiseta o uniforme sobre la mesa de trabajo.</p>
+      </article>
+
+      <article class="paso-card">
+        <span class="paso-numero">2</span>
+        <span class="paso-icono">🖼️</span>
+        <h3>Colocar el diseño</h3>
+        <p>Situar la pantalla o plantilla en la posición correcta.</p>
+      </article>
+
+      <article class="paso-card">
+        <span class="paso-numero">3</span>
+        <span class="paso-icono">🎨</span>
+        <h3>Aplicar la tinta</h3>
+        <p>Extender la tinta con cuidado usando la racleta.</p>
+      </article>
+
+      <article class="paso-card">
+        <span class="paso-numero">4</span>
+        <span class="paso-icono">🌬️</span>
+        <h3>Secar la prenda</h3>
+        <p>Dejar secar el uniforme antes de manipularlo.</p>
+      </article>
+
+      <article class="paso-card">
+        <span class="paso-numero">5</span>
+        <span class="paso-icono">🔍</span>
+        <h3>Revisar calidad</h3>
+        <p>Comprobar que el dibujo está completo y bien colocado.</p>
+      </article>
+
+      <article class="paso-card">
+        <span class="paso-numero">6</span>
+        <span class="paso-icono">📦</span>
+        <h3>Preparar entrega</h3>
+        <p>Doblar, contar y guardar las prendas terminadas.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="pantallaProduccion" class="pantalla oculto">
+    <button class="volver-btn" id="volverProduccion">← Volver al menú</button>
+    <h2>Seguimiento de producción</h2>
+    <p class="descripcion">Consulta el estado de los pedidos realizados.</p>
+    <div id="listaProduccion"></div>
+  </section>
+
+  <section id="pantallaEstadisticas" class="pantalla oculto">
+    <button class="volver-btn" id="volverEstadisticas">← Volver al menú</button>
+    <h2>Estadísticas del taller</h2>
+    <p class="descripcion">Resumen general de la actividad registrada en InclusiPrint.</p>
+
+    <div class="estadisticas-grid">
+      <article class="estadistica-card">
+        <span class="estadistica-icono">📋</span>
+        <h3 id="totalPedidos">0</h3>
+        <p>Pedidos registrados</p>
+      </article>
+
+      <article class="estadistica-card">
+        <span class="estadistica-icono">👕</span>
+        <h3 id="totalPrendas">0</h3>
+        <p>Prendas solicitadas</p>
+      </article>
+
+      <article class="estadistica-card">
+        <span class="estadistica-icono">📦</span>
+        <h3 id="totalMateriales">0</h3>
+        <p>Materiales en stock</p>
+      </article>
+
+      <article class="estadistica-card">
+        <span class="estadistica-icono">🧮</span>
+        <h3 id="totalUnidadesStock">0</h3>
+        <p>Unidades disponibles</p>
+      </article>
+    </div>
+  </section>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
