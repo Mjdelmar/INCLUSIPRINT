@@ -37,7 +37,25 @@
     <button id="logoutBtn" class="logout-btn">Salir</button>
   </header>
 
-  <section id="menuPrincipal" class="menu-grid">
+  <section id="menuPrincipal">
+
+<div class="banner">
+
+    <div class="banner-overlay">
+
+        <h2>InclusiPrint</h2>
+
+        <p>
+            Aplicación accesible para la gestión y apoyo visual
+            del taller de serigrafía ocupacional
+        </p>
+
+    </div>
+
+</div>
+
+<div class="menu-grid">
+
     <article class="menu-card" id="btnPedidos">
       <span class="icono">📋</span>
       <h2>Pedidos</h2>
@@ -67,7 +85,8 @@
       <h2>Estadísticas</h2>
       <p>Ver resumen general del taller.</p>
     </article>
-  </section>
+  </div>
+</section>
 
   <section id="pantallaPedidos" class="pantalla oculto">
     <button class="volver-btn" id="volverPedidos">← Volver al menú</button>
@@ -79,7 +98,15 @@
       <input type="text" id="cliente" placeholder="Ejemplo: Ayuntamiento">
 
       <label for="prenda">Tipo de prenda</label>
-      <input type="text" id="prenda" placeholder="Ejemplo: Camiseta, polo, uniforme">
+      <select id="prenda">
+        <option value="">Selecciona una prenda</option>
+        <option value="Camiseta blanca">Camiseta blanca</option>
+        <option value="Camiseta negra">Camiseta negra</option>
+        <option value="Polo">Polo</option>
+        <option value="Sudadera">Sudadera</option>
+        <option value="Chaleco laboral">Chaleco laboral</option>
+        <option value="Uniforme completo">Uniforme completo</option>
+      </select>
 
       <label for="cantidad">Cantidad</label>
       <input type="number" id="cantidad" placeholder="Ejemplo: 25">
@@ -91,6 +118,8 @@
     </form>
 
     <h3>Pedidos registrados</h3>
+
+    <input type="text" id="buscadorPedidos" class="buscador" placeholder="Buscar pedido por cliente o prenda...">
 
     <div class="tabla-contenedor">
       <table>
@@ -114,20 +143,43 @@
     <h2>Control de stock</h2>
     <p class="descripcion">Registra los materiales disponibles para el taller de serigrafía.</p>
 
+    <div id="avisoStock" class="aviso-stock oculto"></div>
+
     <form id="stockForm" class="formulario">
       <label for="material">Material</label>
-      <input type="text" id="material" placeholder="Ejemplo: Camisetas blancas talla M">
+      <select id="material">
+        <option value="">Selecciona un material</option>
+        <option value="Camiseta blanca">Camiseta blanca</option>
+        <option value="Camiseta negra">Camiseta negra</option>
+        <option value="Polo">Polo</option>
+        <option value="Sudadera">Sudadera</option>
+        <option value="Chaleco laboral">Chaleco laboral</option>
+        <option value="Uniforme completo">Uniforme completo</option>
+        <option value="Tinta negra">Tinta negra</option>
+        <option value="Tinta blanca">Tinta blanca</option>
+        <option value="Tinta azul">Tinta azul</option>
+        <option value="Pantalla de serigrafía">Pantalla de serigrafía</option>
+        <option value="Racleta">Racleta</option>
+      </select>
 
       <label for="unidades">Unidades disponibles</label>
       <input type="number" id="unidades" placeholder="Ejemplo: 40">
 
       <label for="categoria">Categoría</label>
-      <input type="text" id="categoria" placeholder="Ejemplo: Prendas, tintas, herramientas">
+      <select id="categoria">
+        <option value="">Selecciona una categoría</option>
+        <option value="Prendas">Prendas</option>
+        <option value="Tintas">Tintas</option>
+        <option value="Herramientas">Herramientas</option>
+        <option value="Otros materiales">Otros materiales</option>
+      </select>
 
       <button type="submit">Guardar material</button>
     </form>
 
     <h3>Materiales registrados</h3>
+
+    <input type="text" id="buscadorStock" class="buscador" placeholder="Buscar material o categoría...">
 
     <div class="tabla-contenedor">
       <table>
@@ -136,6 +188,7 @@
             <th>Material</th>
             <th>Unidades</th>
             <th>Categoría</th>
+            <th>Estado</th>
             <th>Acción</th>
           </tr>
         </thead>
