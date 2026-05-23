@@ -11,12 +11,15 @@ const pantallaPedidos = document.getElementById("pantallaPedidos");
 const volverPedidos = document.getElementById("volverPedidos");
 const pedidoForm = document.getElementById("pedidoForm");
 const listaPedidos = document.getElementById("listaPedidos");
+const buscadorPedidos = document.getElementById("buscadorPedidos");
 
 const btnStock = document.getElementById("btnStock");
 const pantallaStock = document.getElementById("pantallaStock");
 const volverStock = document.getElementById("volverStock");
 const stockForm = document.getElementById("stockForm");
 const listaStock = document.getElementById("listaStock");
+const buscadorStock = document.getElementById("buscadorStock");
+const avisoStock = document.getElementById("avisoStock");
 
 const btnTareas = document.getElementById("btnTareas");
 const pantallaTareas = document.getElementById("pantallaTareas");
@@ -62,12 +65,36 @@ function actualizarTodo() {
   mostrarStock();
   mostrarProduccion();
   mostrarEstadisticas();
+  mostrarAvisoStock();
 }
 
 function claseEstado(estado) {
   if (estado === "En proceso") return "proceso";
   if (estado === "Entregado") return "finalizado";
   return "pendiente";
+}
+
+function estadoStock(unidades) {
+  const numero = Number(unidades);
+
+  if (numero <= 5) {
+    return {
+      texto: "Stock bajo",
+      clase: "stock-bajo"
+    };
+  }
+
+  if (numero <= 15) {
+    return {
+      texto: "Stock medio",
+      clase: "stock-medio"
+    };
+  }
+
+  return {
+    texto: "Stock correcto",
+    clase: "stock-correcto"
+  };
 }
 
 loginForm.addEventListener("submit", function(event) {
@@ -98,6 +125,7 @@ btnPedidos.addEventListener("click", function() {
   menuPrincipal.classList.add("oculto");
   ocultarPantallas();
   pantallaPedidos.classList.remove("oculto");
+  mostrarPedidos();
 });
 
 volverPedidos.addEventListener("click", function() {
@@ -123,7 +151,8 @@ pedidoForm.addEventListener("submit", function(event) {
     prenda: prenda,
     cantidad: cantidad,
     fecha: fecha,
-    estado: "Pendiente"
+    estado: "Pendiente",
+    descontadoStock: false
   };
 
   pedidos.push(nuevoPedido);
@@ -133,11 +162,34 @@ pedidoForm.addEventListener("submit", function(event) {
   actualizarTodo();
 });
 
+buscadorPedidos.addEventListener("input", function() {
+  mostrarPedidos();
+});
+
 function mostrarPedidos() {
   listaPedidos.innerHTML = "";
 
-  pedidos.forEach(function(pedido, index) {
+  const textoBusqueda = buscadorPedidos.value.toLowerCase();
+
+  const pedidosFiltrados = pedidos.filter(function(pedido) {
+    return pedido.cliente.toLowerCase().includes(textoBusqueda) ||
+           pedido.prenda.toLowerCase().includes(textoBusqueda);
+  });
+
+  if (pedidosFiltrados.length === 0) {
+    listaPedidos.innerHTML = `
+      <tr>
+        <td colspan="6">No hay pedidos que mostrar.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  pedidosFiltrados.forEach(function(pedido) {
     if (!pedido.estado) pedido.estado = "Pendiente";
+    if (pedido.descontadoStock === undefined) pedido.descontadoStock = false;
+
+    const indexReal = pedidos.indexOf(pedido);
 
     const fila = document.createElement("tr");
 
@@ -147,7 +199,7 @@ function mostrarPedidos() {
       <td>${pedido.cantidad}</td>
       <td>${pedido.fecha}</td>
       <td><span class="estado ${claseEstado(pedido.estado)}">${pedido.estado}</span></td>
-      <td><button class="delete-btn" onclick="eliminarPedido(${index})">🗑️</button></td>
+      <td><button class="delete-btn" onclick="eliminarPedido(${indexReal})">🗑️</button></td>
     `;
 
     listaPedidos.appendChild(fila);
@@ -157,6 +209,12 @@ function mostrarPedidos() {
 }
 
 function eliminarPedido(index) {
+  const confirmar = confirm("¿Deseas eliminar este pedido?");
+
+  if (!confirmar) {
+    return;
+  }
+
   pedidos.splice(index, 1);
   guardarPedidos();
   actualizarTodo();
@@ -166,6 +224,7 @@ btnStock.addEventListener("click", function() {
   menuPrincipal.classList.add("oculto");
   ocultarPantallas();
   pantallaStock.classList.remove("oculto");
+  mostrarStock();
 });
 
 volverStock.addEventListener("click", function() {
@@ -198,17 +257,41 @@ stockForm.addEventListener("submit", function(event) {
   actualizarTodo();
 });
 
+buscadorStock.addEventListener("input", function() {
+  mostrarStock();
+});
+
 function mostrarStock() {
   listaStock.innerHTML = "";
 
-  stock.forEach(function(item, index) {
+  const textoBusqueda = buscadorStock.value.toLowerCase();
+
+  const stockFiltrado = stock.filter(function(item) {
+    return item.material.toLowerCase().includes(textoBusqueda) ||
+           item.categoria.toLowerCase().includes(textoBusqueda);
+  });
+
+  if (stockFiltrado.length === 0) {
+    listaStock.innerHTML = `
+      <tr>
+        <td colspan="5">No hay materiales que mostrar.</td>
+      </tr>
+    `;
+    return;
+  }
+
+  stockFiltrado.forEach(function(item) {
+    const indexReal = stock.indexOf(item);
+    const estado = estadoStock(item.unidades);
+
     const fila = document.createElement("tr");
 
     fila.innerHTML = `
       <td>${item.material}</td>
       <td>${item.unidades}</td>
       <td>${item.categoria}</td>
-      <td><button class="delete-btn" onclick="eliminarStock(${index})">🗑️</button></td>
+      <td><span class="estado-stock ${estado.clase}">${estado.texto}</span></td>
+      <td><button class="delete-btn" onclick="eliminarStock(${indexReal})">🗑️</button></td>
     `;
 
     listaStock.appendChild(fila);
@@ -216,9 +299,33 @@ function mostrarStock() {
 }
 
 function eliminarStock(index) {
+  const confirmar = confirm("¿Deseas eliminar este material del stock?");
+
+  if (!confirmar) {
+    return;
+  }
+
   stock.splice(index, 1);
   guardarStock();
   actualizarTodo();
+}
+
+function mostrarAvisoStock() {
+  const materialesBajos = stock.filter(function(item) {
+    return Number(item.unidades) <= 5;
+  });
+
+  if (materialesBajos.length === 0) {
+    avisoStock.classList.add("oculto");
+    avisoStock.innerHTML = "";
+    return;
+  }
+
+  avisoStock.classList.remove("oculto");
+
+  avisoStock.innerHTML = `
+    ⚠️ Atención: hay ${materialesBajos.length} material/es con stock bajo.
+  `;
 }
 
 btnTareas.addEventListener("click", function() {
@@ -254,6 +361,7 @@ function mostrarProduccion() {
 
   pedidos.forEach(function(pedido, index) {
     if (!pedido.estado) pedido.estado = "Pendiente";
+    if (pedido.descontadoStock === undefined) pedido.descontadoStock = false;
 
     const tarjeta = document.createElement("div");
     tarjeta.classList.add("produccion-card");
@@ -280,9 +388,32 @@ function mostrarProduccion() {
 }
 
 function cambiarEstado(index, nuevoEstado) {
-  pedidos[index].estado = nuevoEstado;
+  const pedido = pedidos[index];
+
+  if (nuevoEstado === "En proceso" && pedido.descontadoStock === false) {
+    descontarDelStock(pedido.prenda, Number(pedido.cantidad));
+    pedido.descontadoStock = true;
+  }
+
+  pedido.estado = nuevoEstado;
   guardarPedidos();
+  guardarStock();
   actualizarTodo();
+}
+
+function descontarDelStock(nombrePrenda, cantidadPedido) {
+  const prendaNormalizada = nombrePrenda.toLowerCase();
+
+  const materialEncontrado = stock.find(function(item) {
+    return item.material.toLowerCase().includes(prendaNormalizada) ||
+           prendaNormalizada.includes(item.material.toLowerCase());
+  });
+
+  if (materialEncontrado) {
+    materialEncontrado.unidades = Math.max(0, Number(materialEncontrado.unidades) - cantidadPedido);
+  } else {
+    alert("No se ha encontrado en stock un material que coincida con la prenda del pedido.");
+  }
 }
 
 btnEstadisticas.addEventListener("click", function() {
